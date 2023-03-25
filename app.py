@@ -1,14 +1,15 @@
 from flask import Flask, render_template, request
 import sqlite3
+import requests
 
 app = Flask(__name__)
+
 
 
 def validate_user(email, password):
     print("validating user...")
     user = {}
-
-    conn = sqlite3.connect('./static/data/activity_tracker.db')
+    conn = sqlite3.connect('./static/data/sleep.db')
     curs = conn.cursor()
     #get all columns if there is a match
     result  = curs.execute("SELECT name, email, phone FROM users WHERE email=(?) AND password= (?)", [email, password])
@@ -21,7 +22,7 @@ def validate_user(email, password):
 
 
 def store_user(name, email, phone, pw):
-    conn = sqlite3.connect('./static/data/activity_tracker.db')
+    conn = sqlite3.connect('./static/data/sleep.db')
     curs = conn.cursor()
     curs.execute("INSERT INTO users (name, email, phone, password) VALUES((?),(?),(?),(?))",
         (name, email, phone, pw))
@@ -31,7 +32,7 @@ def store_user(name, email, phone, pw):
 
 
 def get_all_users():
-    conn = sqlite3.connect('./static/data/activity_tracker.db')
+    conn = sqlite3.connect('./static/data/sleep.db')
     curs = conn.cursor()
     all_users = [] # will store them in a list
     rows = curs.execute("SELECT rowid, * from users")
@@ -52,17 +53,21 @@ def get_all_users():
 def index():
     return render_template('index.html')
 
+
 @app.route('/signup')
 def signup():
     return render_template('signup.html')
 
 @app.route('/home')
 def home():
-
     return render_template('home.html')
 
 @app.route('/login_user' , methods=['POST'])
 def login_user():
+    # limit = 1
+    # api_url = 'https://api.api-ninjas.com/v1/dadjokes?limit={}'.format(limit)
+    # response = requests.get(api_url, headers={'X-Api-Key': 'R/O4nJRrlY5t7y+JLgmClg==7nRoFX6EcEAXJs8w'})
+    # jData = response.text()
 
     email = request.form['email']
     password = request.form['password']
@@ -74,11 +79,12 @@ def login_user():
        
         data = {
             "name": user["name"],
-            "phone": user["phone"]
+            "phone": user["phone"],
+            # "joke" : jData["joke"]
         }
 
         #load home if there is a user, along with data.
-        return render_template('home.html', data=data)
+        return render_template('home.html',data=data)
          
 
     else: 
@@ -88,7 +94,7 @@ def login_user():
             "error_msg": error_msg
         }
         #no user redirects back to the main login page, with error msg.
-        return render_template('index.html', data=data)
+        return render_template('index.html',data=data)
 
 
 
@@ -109,6 +115,7 @@ def post_user():
 
 
     return render_template('index.html', user=new_user)
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

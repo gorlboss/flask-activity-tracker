@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sleep Tracker (Data)</title>
+    <link rel="stylesheet" href="./static/styles.css">
+</head>
+<body>
+    <div class="main-container">
+    <h1>Enter Your Sleep Info!</h1>
+    <form action="post_user" method="POST">
+
+        <input type="text" id="name-input" name="name" placeholder="Your name"> <p></p>
+        <input type="text" id="date-input" name="date" placeholder="Today's Date"> <p></p>
+        <input type="time" id="start-input" name="sleep start" placeholder="Enter the time you fell asleep"> <p></p>
+        <input type="time" id="end-input" name="sleep end" placeholder="Enter the time you woke up"><p></p>
+        <button class="submit-btn" type="submit">Enter sleep!</button>
+    
+    </form>
+</body>
+</html>
